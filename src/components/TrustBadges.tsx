@@ -5,7 +5,7 @@ const badges = [
   { icon: Package, label: "Handcrafted", desc: "By master artisans" },
   { icon: Shield, label: "Authenticated", desc: "Certificate of origin" },
   { icon: Truck, label: "Free Shipping", desc: "Orders above ₹5,000" },
-  { icon: RefreshCw, label: "Easy Returns", desc: "14-day return policy" },
+  { icon: RefreshCw, label: "Easy Returns", desc: "7-day return policy" },
 ];
 
 export default function TrustBadges() {

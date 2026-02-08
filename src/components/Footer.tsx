@@ -1,55 +1,90 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const footerLinks = {
-  Shop: ["Sacred Crafts", "Textiles", "Jewelry", "Home & Living", "New Arrivals"],
-  Company: ["Our Story", "Artisan Network", "Sustainability", "Press"],
-  Support: ["Contact Us", "Shipping & Returns", "FAQ", "Track Order"],
-};
+const footerLinks = [
+  {
+    title: "Assistance",
+    links: [
+      { label: "Contact", href: "/legal/contact" },
+      { label: "Shipping Policy", href: "/legal/shipping-policy" },
+      { label: "Returns & Refunds", href: "/legal/returns-refunds" },
+      { label: "Cancellation Policy", href: "/legal/cancellation-policy" },
+      { label: "FAQ", href: "/legal/faq" },
+    ]
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy Policy", href: "/legal/privacy-policy" },
+      { label: "Terms & Conditions", href: "/legal/terms-conditions" },
+      { label: "Disclaimer", href: "/legal/disclaimer" },
+      { label: "Cookies", href: "/legal/cookies" },
+      { label: "Intellectual Property", href: "/legal/intellectual-property" },
+    ]
+  }
+];
 
 export default function Footer() {
   return (
-    <footer className="bg-card border-t border-border/40">
-      <div className="luxury-container py-16 md:py-24">
-        {/* Top section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <h3 className="editorial-heading text-2xl mb-2">Upasanajyoti</h3>
-            <p className="text-xs tracking-luxury text-muted-foreground">The Quiet Light of Craft</p>
-            <div className="gold-divider mt-6 mx-0" />
+    <footer className="bg-background border-t border-border/10">
+      <div className="luxury-container py-24 md:py-32">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 lg:gap-24">
+          {/* Brand Identity */}
+          <div className="md:col-span-4 flex flex-col justify-between">
+            <div>
+              <h3 className="font-serif text-3xl md:text-4xl gold-text mb-4">Upasanajyoti</h3>
+              <p className="text-[10px] tracking-futuristic text-muted-foreground uppercase leading-loose max-w-[280px]">
+                Preserving the rhythmic pulse of Indian craft through the lens of tomorrow.
+              </p>
+            </div>
+
+            <div className="mt-12 md:mt-0 flex gap-6">
+              {["Instagram", "Vimeo", "Journal"].map(social => (
+                <Link key={social} to="#" className="text-[9px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors">
+                  {social}
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="text-xs tracking-luxury uppercase text-muted-foreground mb-6">{title}</h4>
-              <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link}>
-                    <Link
-                      to="#"
-                      className="text-sm text-foreground/70 hover:text-foreground transition-colors font-sans"
-                    >
-                      {link}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Navigation Matrix */}
+          <div className="md:col-span-8 grid grid-cols-2 gap-12 sm:gap-24">
+            {footerLinks.map((section) => (
+              <div key={section.title}>
+                <h4 className="text-[10px] tracking-futuristic uppercase text-foreground mb-8">{section.title}</h4>
+                <ul className="space-y-4">
+                  {section.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        to={link.href}
+                        className="text-[11px] tracking-widest text-muted-foreground hover:text-primary transition-all duration-300 font-sans uppercase"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-16 pt-8 border-t border-border/30 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground font-sans">
-            © 2025 Upasanajyoti. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            {["Privacy Policy", "Terms of Service"].map((item) => (
-              <Link key={item} to="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors font-sans">
-                {item}
-              </Link>
-            ))}
+        {/* Legal & Meta */}
+        <div className="mt-24 pt-12 border-t border-border/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          <div className="flex flex-col gap-4">
+            <p className="text-[9px] tracking-widest text-muted-foreground/60 font-sans uppercase">
+              © 2026 Upasanajyoti Collective. All rights reserved.
+            </p>
+            <p className="text-[9px] tracking-widest text-muted-foreground/40 font-sans uppercase">
+              Grievance Officer: support@upasanajyoti.com
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="h-1 w-1 rounded-full bg-primary/40 animate-pulse" />
+            <span className="text-[9px] tracking-[0.3em] text-muted-foreground uppercase">
+              Synchronized from Bharat
+            </span>
           </div>
         </div>
       </div>
