@@ -55,6 +55,12 @@ export default function Navbar() {
 
   const filteredProducts = searchData?.products?.products || [];
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setProfileOpen(false);
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -255,6 +261,99 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden fixed inset-x-0 top-[60px] z-50 mx-2 sm:mx-4"
+          >
+            <div className="glass-card rounded-2xl shadow-2xl border border-primary/10 overflow-hidden">
+              <div className="p-6 space-y-2">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.label}
+                    to={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+
+                <div className="border-t border-border/10 pt-4 mt-4 space-y-2">
+                  <button
+                    onClick={() => {
+                      setSearchOpen(true);
+                      setMobileOpen(false);
+                    }}
+                    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                  >
+                    <Search className="w-4 h-4" />
+                    Search
+                  </button>
+
+                  {isAuthenticated ? (
+                    <>
+                      {user?.role === 'ADMIN' && (
+                        <>
+                          <Link
+                            to="/admin/products"
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                          >
+                            <Package className="w-4 h-4" />
+                            Manage Products
+                          </Link>
+                          <Link
+                            to="/admin/orders"
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                          >
+                            <ShoppingCart className="w-4 h-4" />
+                            Orders
+                          </Link>
+                        </>
+                      )}
+                      <Link
+                        to="/orders"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                      >
+                        <Package className="w-4 h-4" />
+                        My Orders
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMobileOpen(false);
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-destructive hover:bg-destructive/10 transition-all"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <Link
+                      to="/auth"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm tracking-luxury uppercase text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all"
+                    >
+                      <User className="w-4 h-4" />
+                      Sign In
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {searchOpen && (

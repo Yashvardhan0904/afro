@@ -369,8 +369,23 @@ export default function ProductDetail() {
                       </button>
                     </div>
 
-                    <button className="glass-card py-5 rounded-full text-[10px] tracking-futuristic uppercase text-foreground hover:bg-foreground hover:text-background transition-all duration-500">
-                      Buy Now
+                    <button
+                      onClick={() => {
+                        if (product && product.stock > 0) {
+                          addToCart({
+                            id: product.id,
+                            title: product.title,
+                            price: product.price,
+                            image: product.thumbnail || product.images?.[0] || '/placeholder.svg',
+                            quantity,
+                          });
+                          navigate('/checkout');
+                        }
+                      }}
+                      disabled={!product || product.stock === 0}
+                      className="glass-card py-5 rounded-full text-[10px] tracking-futuristic uppercase text-foreground hover:bg-foreground hover:text-background transition-all duration-500 disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {product?.stock === 0 ? 'Out of Stock' : 'Buy Now'}
                     </button>
                   </div>
                 </div>
