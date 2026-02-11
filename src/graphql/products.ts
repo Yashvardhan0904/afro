@@ -171,7 +171,11 @@ export const DELETE_PRODUCT_MUTATION = gql`
 
 export const LIKE_PRODUCT_MUTATION = gql`
   mutation LikeProduct($productId: ID!) {
-    likeProduct(productId: $productId)
+    likeProduct(productId: $productId) {
+      userId
+      productId
+      createdAt
+    }
   }
 `;
 

@@ -151,22 +151,32 @@ export default function AdminProductForm() {
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
 
-      const input = {
+      const input: Record<string, any> = {
         title: formData.title,
         slug,
         description: formData.description,
         price: Math.round(parseFloat(formData.price) * 100), // Convert to paise
-        mrp: formData.mrp ? Math.round(parseFloat(formData.mrp) * 100) : undefined,
         stock: parseInt(formData.stock),
         lowStockThreshold: parseInt(formData.lowStockThreshold),
-        categoryId: formData.categoryId || undefined,
         images: imageUrls,
         thumbnail: thumbnailUrl || imageUrls[0],
-        metaTitle: formData.metaTitle || undefined,
-        metaDescription: formData.metaDescription || undefined,
         isActive: formData.isActive,
         isFeatured: formData.isFeatured,
       };
+
+      // Only include optional fields if they have values
+      if (formData.mrp) {
+        input.mrp = Math.round(parseFloat(formData.mrp) * 100);
+      }
+      if (formData.categoryId) {
+        input.categoryId = formData.categoryId;
+      }
+      if (formData.metaTitle) {
+        input.metaTitle = formData.metaTitle;
+      }
+      if (formData.metaDescription) {
+        input.metaDescription = formData.metaDescription;
+      }
 
       if (isEdit) {
         await updateProduct({ variables: { id, input } });

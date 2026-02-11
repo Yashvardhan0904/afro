@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingBag, User, Menu, X, LogOut, Settings, Package, ShoppingCart, ArrowRight, Loader2 } from "lucide-react";
+import { Search, ShoppingBag, User, Menu, X, LogOut, Settings, Package, ShoppingCart, ArrowRight, Loader2, Layers } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery, useLazyQuery } from "@apollo/client/react";
 import { useCart } from "@/contexts/CartContext";
@@ -177,6 +177,14 @@ export default function Navbar() {
                               >
                                 <Package className="w-4 h-4" />
                                 <span>Manage Products</span>
+                              </Link>
+                              <Link
+                                to="/admin/categories"
+                                onClick={() => setProfileOpen(false)}
+                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors text-sm"
+                              >
+                                <Layers className="w-4 h-4" />
+                                <span>Categories</span>
                               </Link>
                               <Link
                                 to="/admin/orders"

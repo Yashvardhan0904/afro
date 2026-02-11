@@ -11,10 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 import Layout from "@/components/Layout";
 
 const DEFAULT_CATEGORIES = [
-    { name: "Sacred Crafts", slug: "sacred-crafts", description: "Ritual objects, brass vessels, and ceremonial tools." },
-    { name: "Textiles", slug: "textiles", description: "Handwoven stoles, sarees, and heritage fabrics." },
-    { name: "Home & Living", slug: "home-living", description: "Artisanal decor and functional museum-quality pieces." },
-    { name: "Jewelry", slug: "jewelry", description: "Ancient motifs reimagined in precious and semi-precious metals." },
+    { name: "Statues", slug: "statues", description: "Beautiful handcrafted statues of deities and spiritual figures" },
+    { name: "Sacred Jewelry", slug: "sacred-jewelry", description: "Handcrafted spiritual jewelry with sacred symbols" },
+    { name: "Meditation Tools", slug: "meditation-tools", description: "Tools to enhance your meditation practice" },
+    { name: "Incense & Aromatherapy", slug: "incense-aromatherapy", description: "Premium incense, essential oils and aromatherapy products" },
+    { name: "Crystals & Gemstones", slug: "crystals-gemstones", description: "Natural healing crystals and precious gemstones" },
+    { name: "Spiritual Textiles", slug: "spiritual-textiles", description: "Sacred textiles, tapestries and fabrics for spiritual practices" },
+    { name: "Home Decor", slug: "home-decor", description: "Spiritual and luxury home decoration items" },
+    { name: "Books & Journals", slug: "books-journals", description: "Spiritual books, guided journals and sacred texts" },
 ];
 
 export default function AdminCategories() {

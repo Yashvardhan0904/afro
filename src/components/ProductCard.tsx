@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Star } from "lucide-react";
 import type { Product } from "@/data/products";
 
 // Map product image keys to imported images
@@ -80,6 +81,30 @@ export default function ProductCard({ product }: { product: Product }) {
           <h3 className="editorial-heading text-lg md:text-2xl gold-text group-hover:tracking-wider transition-all duration-700 truncate px-2">
             {product.name}
           </h3>
+          
+          {/* Rating Display */}
+          {product.rating > 0 && (
+            <div className="flex items-center justify-center gap-1.5 pt-1">
+              <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`w-3 h-3 ${
+                      i < Math.floor(product.rating)
+                        ? "text-primary fill-primary"
+                        : i < product.rating
+                        ? "text-primary fill-primary/50"
+                        : "text-border/40"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-[10px] text-muted-foreground">
+                ({product.reviews})
+              </span>
+            </div>
+          )}
+          
           <div className="flex items-center justify-center gap-3 md:gap-4">
             <div className="h-px w-6 md:w-8 bg-primary/20 group-hover:w-10 transition-all duration-700" />
             <p className="text-xs md:text-sm font-sans tracking-widest text-foreground font-light tabular-nums">

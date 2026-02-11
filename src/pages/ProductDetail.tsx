@@ -7,9 +7,12 @@ import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/Layout";
 import { GET_PRODUCT_BY_ID_QUERY, LIKE_PRODUCT_MUTATION, UNLIKE_PRODUCT_MUTATION } from "@/graphql/products";
+import { isAuthenticated, removeAuthToken } from "@/lib/apollo-client";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [lastTap, setLastTap] = useState(0);
@@ -24,9 +27,13 @@ export default function ProductDetail() {
     skip: !id
   });
 
-  // Like/Unlike mutations
-  const [likeProduct] = useMutation(LIKE_PRODUCT_MUTATION);
-  const [unlikeProduct] = useMutation(UNLIKE_PRODUCT_MUTATION);
+  // Like/Unlike mutations — refetch product data to update rating & count
+  const [likeProduct] = useMutation(LIKE_PRODUCT_MUTATION, {
+    refetchQueries: [{ query: GET_PRODUCT_BY_ID_QUERY, variables: { id } }],
+  });
+  const [unlikeProduct] = useMutation(UNLIKE_PRODUCT_MUTATION, {
+    refetchQueries: [{ query: GET_PRODUCT_BY_ID_QUERY, variables: { id } }],
+  });
 
   const product = data?.product;
   const [isLiked, setIsLiked] = useState(false);
@@ -41,6 +48,15 @@ export default function ProductDetail() {
   const handleLikeToggle = async () => {
     if (!product) return;
 
+    if (!isAuthenticated()) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to like products",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newLikedState = !isLiked;
     setIsLiked(newLikedState);
 
@@ -50,10 +66,26 @@ export default function ProductDetail() {
       } else {
         await unlikeProduct({ variables: { productId: product.id } });
       }
-    } catch (err) {
+    } catch (err: any) {
       // Revert on error
       setIsLiked(!newLikedState);
-      console.error('Error toggling like:', err);
+      const gqlError = err?.graphQLErrors?.[0]?.extensions?.code || err?.message || '';
+      if (gqlError === 'UNAUTHENTICATED' || gqlError.includes('Unauthorized') || err?.message?.includes('Unauthorized')) {
+        // Token is expired or invalid — clear it and redirect
+        removeAuthToken();
+        toast({
+          title: "Session expired",
+          description: "Please sign in again to like products",
+          variant: "destructive",
+        });
+        setTimeout(() => navigate('/auth'), 1500);
+      } else {
+        toast({
+          title: "Something went wrong",
+          description: err?.message || "Could not update like. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -172,7 +204,12 @@ export default function ProductDetail() {
                 onClick={() => {
                   const now = Date.now();
                   if (now - lastTap < 300) {
-                    setIsLiked(true);
+                    if (!isLiked && isAuthenticated()) {
+                      setIsLiked(true);
+                      likeProduct({ variables: { productId: product.id } }).catch(() => setIsLiked(false));
+                    } else if (!isAuthenticated()) {
+                      toast({ title: "Sign in required", description: "Please sign in to like products", variant: "destructive" });
+                    }
                     setShowHeartOverlay(true);
                     setTimeout(() => setShowHeartOverlay(false), 1000);
                   }
@@ -234,19 +271,29 @@ export default function ProductDetail() {
                   {product.title}
                 </h1>
 
-                {/* Rating */}
+                {/* Rating — dynamic, updates when you like */}
                 <div className="flex items-center gap-4 mb-10">
                   <div className="flex gap-1.5 pt-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-3 h-3 ${i < Math.floor(product.averageRating || 0) ? "text-primary fill-primary" : "text-border/40"
+                    {[...Array(5)].map((_, i) => {
+                      const rating = product.averageRating || 0;
+                      const filled = i < Math.floor(rating);
+                      const halfFilled = !filled && i < rating;
+                      return (
+                        <Star
+                          key={i}
+                          className={`w-3 h-3 transition-all duration-500 ${
+                            filled
+                              ? "text-primary fill-primary"
+                              : halfFilled
+                              ? "text-primary fill-primary/50"
+                              : "text-border/40"
                           }`}
-                      />
-                    ))}
+                        />
+                      );
+                    })}
                   </div>
                   <span className="text-[10px] tracking-widest text-muted-foreground uppercase">
-                    Artist Verified ({product.reviewCount || 0} appraisals)
+                    {(product.averageRating || 0).toFixed(1)} · {product.reviewCount || 0} appraisals · {product.likeCount || 0} {product.likeCount === 1 ? 'like' : 'likes'}
                   </span>
                 </div>
 

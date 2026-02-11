@@ -20,6 +20,7 @@ import AdminOrders from "./pages/AdminOrders";
 import MyOrders from "./pages/MyOrders";
 import OrderTracking from "./pages/OrderTracking";
 import Legal from "./pages/Legal";
+import OurStory from "./pages/OurStory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/story" element={<OurStory />} />
                 <Route path="/collections" element={<Collections />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/auth" element={<Auth />} />
