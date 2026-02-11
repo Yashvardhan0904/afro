@@ -3,7 +3,6 @@ import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URL || 'https://brofr-production.up.railway.app/graphql',
-  credentials: 'include',
 });
 
 const authLink = setContext((_, { headers }) => {
