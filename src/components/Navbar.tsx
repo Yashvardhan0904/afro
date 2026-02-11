@@ -24,7 +24,6 @@ export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const isStoryPage = location.pathname === '/story';
   const cartCount = getCartCount();
 
   const [searchProducts, { data: searchData, loading: searchLoading }] = useLazyQuery<{
@@ -90,11 +89,11 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled && !isStoryPage ? "py-2" : "py-4"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? "py-2" : "py-4"
         }`}
     >
       <nav
-        className={`luxury-container flex items-center justify-between transition-all duration-500 rounded-full px-4 md:px-6 py-2 ${scrolled && !isStoryPage ? "glass-card mx-2 sm:mx-8 md:mx-12 shadow-2xl shadow-primary/5" : "bg-transparent"
+        className={`luxury-container flex items-center justify-between transition-all duration-500 rounded-full px-4 md:px-6 py-2 ${scrolled ? "glass-card mx-2 sm:mx-8 md:mx-12 shadow-2xl shadow-primary/5" : "bg-transparent"
           }`}
       >
         {/* Left: Logo */}
