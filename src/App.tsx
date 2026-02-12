@@ -21,6 +21,7 @@ import MyOrders from "./pages/MyOrders";
 import OrderTracking from "./pages/OrderTracking";
 import Legal from "./pages/Legal";
 import OurStory from "./pages/OurStory";
+import GoogleAuthCallback from "./pages/GoogleAuthCallback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/collections" element={<Collections />} />
                 <Route path="/product/:id" element={<ProductDetail />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/admin/products" element={<AdminProducts />} />

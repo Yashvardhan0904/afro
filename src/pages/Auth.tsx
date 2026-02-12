@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import { LOGIN_MUTATION, REGISTER_MUTATION } from "@/graphql/auth";
 import { setAuthToken } from "@/lib/apollo-client";
@@ -22,8 +22,22 @@ export default function Auth() {
     const [showOtp, setShowOtp] = useState(false);
     const [inlineError, setInlineError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const { toast } = useToast();
     const { login: authLogin, isAuthenticated } = useAuth();
+
+    // Handle Google auth error redirect
+    useEffect(() => {
+        const error = searchParams.get("error");
+        if (error === "google_auth_failed") {
+            setInlineError("Google sign-in failed. Please try again or use email.");
+            toast({
+                title: "Google Sign-In Failed",
+                description: "We couldn't complete the Google sign-in. Please try again.",
+                variant: "default",
+            });
+        }
+    }, [searchParams, toast]);
 
     const [login, { loading: loginLoading }] = useMutation<{
         login: {
@@ -378,7 +392,14 @@ export default function Auth() {
                             </div>
                         </div>
 
-                        <Button variant="outline" className="w-full h-11 md:h-12 rounded-xl text-[9px] md:text-[10px] uppercase tracking-luxury border-border/50 hover:bg-primary/5 transition-all group">
+                        <Button
+                            variant="outline"
+                            className="w-full h-11 md:h-12 rounded-xl text-[9px] md:text-[10px] uppercase tracking-luxury border-border/50 hover:bg-primary/5 transition-all group"
+                            onClick={() => {
+                                const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_GRAPHQL_URL?.replace('/graphql', '') || 'http://localhost:4000';
+                                window.location.href = `${apiUrl}/auth/google`;
+                            }}
+                        >
                             <svg className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" viewBox="0 0 24 24">
                                 <path
                                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -397,7 +418,7 @@ export default function Auth() {
                                     fill="#EA4335"
                                 />
                             </svg>
-                            Google
+                            Continue with Google
                         </Button>
                         <p className="mt-8 md:mt-10 text-center text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-widest">
                             {isLogin ? "New here?" : "Already a seeker?"}{" "}
