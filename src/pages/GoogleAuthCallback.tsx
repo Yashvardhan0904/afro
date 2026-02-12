@@ -50,7 +50,8 @@ export default function GoogleAuthCallback() {
         description: `Signed in successfully${name ? `, ${name}` : ""}.`,
       });
 
-      navigate("/");
+      // Hard redirect to force Apollo client to re-read token
+      window.location.href = "/";
     } else {
       toast({
         title: "Authentication Error",
